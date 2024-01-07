@@ -168,6 +168,14 @@ document.querySelector('.b-10').addEventListener('click', makeTen);
 function makeEleven() {
 	const paragraphEleven = document.getElementById('practicum11');
 	//Ваш код
+	const formOne = document.forms.formOne;
+	const select = formOne.elements.firstSelect;
+	let optionsValues = ' ';
+	for(let i = 0; i < select.length; i++){
+		const elem = select[i].value;
+		optionsValues +=  elem + '| '; 
+	}
+	paragraphEleven.textContent = optionsValues;
 }
 
 document.querySelector('.b-11').addEventListener('click', makeEleven);
@@ -182,6 +190,10 @@ document.querySelector('.b-11').addEventListener('click', makeEleven);
 function makeTwelve() {
 	const paragraphTwelve = document.getElementById('practicum12');
 	//Ваш код
+	const checkbox1 = document.forms.formTwo.elements.checkboxOne;
+	const checkbox2 = document.forms.formTwo.elements.checkboxTwo;
+	const checkbox3 = document.forms.formTwo.elements.checkboxThree;
+	paragraphTwelve.textContent = checkbox1.getAttribute('id') + ' ' + checkbox2.getAttribute('id') + ' ' + checkbox3.getAttribute('id');
 }
 
 document.querySelector('.b-12').addEventListener('click', makeTwelve);
@@ -197,9 +209,16 @@ document.querySelector('.b-12').addEventListener('click', makeTwelve);
 
 function checkButton(e) {
 	e.preventDefault();
-
 	const paragraphThirteen = document.getElementById('practicum13');
 	//Ваш код
+	const lastForm = document.forms.lastForm;
+	const radio = lastForm.elements.fourthName;
+	if(radio.checked){
+		paragraphThirteen.textContent = "Кнопка выбрана";
+	}
+	else{
+		paragraphThirteen.textContent = "Кнопка не выбрана";
+	}
 }
 
 document.querySelector('.b-13').addEventListener('click', checkButton);
@@ -216,6 +235,11 @@ document.querySelector('.b-13').addEventListener('click', checkButton);
 function checkOption() {
 	const paragraphFourteen = document.getElementById('practicum14');
 	//Ваш код
+	const formOne = document.forms.formOne;
+	const select = formOne.elements.firstSelect;
+	if(select.value){
+		paragraphFourteen.textContent = select.value;
+	}
 }
 
 document.querySelector('.b-14').addEventListener('click', checkOption);
@@ -230,6 +254,9 @@ document.querySelector('.b-14').addEventListener('click', checkOption);
 
 function makeFifteen() {
 	//Ваш код
+	const formOne = document.forms.formOne;
+	const select = formOne.elements.firstSelect;
+	select.selectedIndex = 2;
 }
 
 makeFifteen();
@@ -244,6 +271,9 @@ makeFifteen();
 
 function makeSixteen() {
 	//Ваш код
+	const formTwo = document.forms.formTwo;
+	const checkbox3 = formTwo.elements.checkboxThree;
+	checkbox3.checked = true;
 }
 
 makeSixteen();
@@ -258,12 +288,18 @@ makeSixteen();
 //- Добавьте слушатель события submit к форме, чтобы выполнить проверку перед отправкой
 //- В обработчике события вызовите метод event.preventDefault() для отмены отправки формы в случае ошибки
 
-formOne.addEventListener('submit', function (event) {
-	event.preventDefault(); //Отмена отправки
+const form = document.forms.formOne;
 
-	const formOne = document.forms.formOne;
+form.addEventListener('submit', function (event) {
+	event.preventDefault(); //Отмена отправки
 	//Ваш код
+	const firstName = form.elements.firstName;
+	const firstEmail = form.elements.firstEmail;
+	if(firstName.value === '' || firstEmail.value === '' ){
+		document.querySelector('.error-message').textContent = 'Заполните все поля!';
+	}
 });
+
 
 //Задание 18
 //Очистите все поля первой формы после отправки
@@ -274,6 +310,11 @@ formOne.addEventListener('submit', function (event) {
 //- В обработчике события вызовите метод event.preventDefault() для отмены отправки формы в случае ошибки
 
 //Ваш код
+const formOne = document.forms.formOne;
+formOne.addEventListener('submit', function (event) {
+	event.preventDefault();
+	formOne.reset()
+});
 
 //Задание 19
 //При выборе определенной опции из выпадающего списка измените цвет фона страницы
@@ -283,9 +324,20 @@ formOne.addEventListener('submit', function (event) {
 //- В обработчике события, используя условные операторы (if), проверьте выбранную опцию
 //- В зависимости от выбранной опции, измените цвет фона страницы, используя свойство document.body.style.backgroundColor
 
-const selectElement = document.getElementById('colorSelector');
+const selectElement = document.getElementById('firstSelect');
 
-//Ващ код
+selectElement.addEventListener('change', function () {
+	if(selectElement.value === 'Опция 1'){
+		document.body.style.backgroundColor = '#FBFE00';
+	}
+	else if(selectElement.value === 'Опция 2'){
+		document.body.style.backgroundColor = '#090974';
+	}
+	else if(selectElement.value === 'Опция 3'){
+		document.body.style.backgroundColor = '#DC37B8';	
+	}
+});
+
 
 //Задание 20
 //Добавьте валидацию для поля Email
@@ -299,37 +351,75 @@ const selectElement = document.getElementById('colorSelector');
 const emailInput = document.forms.formOne.elements.firstEmail;
 const errorMessage = document.getElementById('errorMessage');
 
+emailInput.addEventListener('input', function () {
+	const emailValue = emailInput.value;
+	const emailRegex = /^[^\s@]+@[^\s@]+.[^\s@]+$/;
+	if(emailRegex.test(emailValue)){
+		emailInput.classList.add('active');
+		errorMessage.textContent = 'Почтовый адрес введен неверно';
+	}
+	else{
+		emailInput.classList.remove('active');
+		errorMessage.textContent = '';
+	}
+});
+
 //Ваш код
 
 //Задание 21
 //При отправке второй формы выполните проверку всех чекбоксов. Если ни один из чекбоксов не выбран, отмените отправку формы и выведите сообщение об ошибке в элементе с id "result21".
 
+const result = document.getElementById('result21');
 document.forms.formTwo.addEventListener('submit', function (evt) {
 	evt.preventDefault();
-
 	const checkbox1 = document.getElementById('checkbox1').checked;
 	const checkbox2 = document.getElementById('checkbox2').checked;
 	const checkbox3 = document.getElementById('checkbox3').checked;
 	//Ваш код
-});
+	if (!checkbox1 && !checkbox2) {
+		evt.preventDefault();
+		result.textContent = 'выберите хотя бы один чекбокс';
+	} else {
+		result.textContent = '';
+	}
+	});
 
 //Задание 22
 //При отправке третьей формы выполните проверку поля Имя на заполненность. Если поле Имя пустое, отмените отправку формы и выведите сообщение об ошибке в элементе с id "result22".
 
 document.querySelector('.b-22').onclick = function (event) {
 	const nameInput = document.forms.formThree.elements.thirdName;
+	const result = document.getElementById('result22');
 	//Ваш код
+	if(nameInput.value === ''){
+		event.preventDefault();
+		result.textContent = 'заполните поле для имени';
+	}
 };
 
 //Задание 23
 //При выборе опции "Я хочу зарегистрироваться" в четвёртой форме кнопка должна быть разблокирована. В противном случае, сделайте кнопку отправки формы заблокированной.
 //Подсказка: используйте свойство disabled
 
+const fourthName = document.forms.lastForm.elements.fourthName;
+const button = document.forms.lastForm.elements.fourthButton;
+fourthName.addEventListener('change', function() {
+	if (fourthName.checked) {
+		button.disabled = false;
+	} else {
+		button.disabled = true;
+	}
+});
+
 //Задание 24
 //Найдите все поля ввода на странице (querySelectorAll) и установите им атрибут "placeholder" со значением "Введите данные" (используйте метод forEach).
 
 document.querySelector('.b-24').addEventListener('click', function () {
 	//Ваш код
+	const input = document.querySelectorAll('input');
+	input.forEach((elem) => {
+		elem.setAttribute('placeholder', 'Введите данные');
+	});
 });
 
 //Задание 25
@@ -337,9 +427,14 @@ document.querySelector('.b-24').addEventListener('click', function () {
 
 document.querySelector('.b-25').addEventListener('click', function () {
 	const inputs = document.querySelectorAll('input');
-
 	inputs.forEach(function (input) {
 		//Ваш код
+		input.addEventListener('focus', function () {
+			input.style.border = '1px solid #00ff00';
+		});
+		input.addEventListener('blur', function () {
+			input.style.border = '';
+		});
 	});
 });
 
@@ -349,6 +444,9 @@ document.querySelector('.b-25').addEventListener('click', function () {
 document.querySelector('.b-26').addEventListener('click', function (event) {
 	event.preventDefault();
 	//Ваш код
+	const result = document.getElementById('result26');
+	const thirdName = document.forms.formThree.elements.thirdName;
+	result.textContent = thirdName.value;
 });
 
 //Задание 27
@@ -359,6 +457,8 @@ const formTwoInputs = document.querySelectorAll('.secondForm input');
 formTwoInputs.forEach(function (input) {
 	input.addEventListener('input', function () {
 		//Ваш код
+		const result = document.getElementById('result27');
+		result.textContent = "Изменение внесено";
 	});
 });
 
@@ -369,4 +469,6 @@ const selectFormThree = document.getElementById('firstSelect');
 
 selectFormThree.addEventListener('change', function () {
 	//Ваш код
+	const result = document.getElementById('result28');
+	result.textContent = "Опция выбрана";
 });
